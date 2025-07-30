@@ -1,23 +1,29 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net"
 	"os"
 
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/internal/handler"
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/pb/service"
+	"github.com/JoelXaverl/ecommerce-go-grpc-be/pkg/database"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 func main() {
+	ctx := context.Background()
 	godotenv.Load()
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Panicf("Error whe listening %v", err)
 	}
+
+	database.ConnectDB(ctx, os.Getenv("DB_URI"))
+	log.Println("Connected to database")
 
 	serviceHadler := handler.NewServiceHandler()
 
