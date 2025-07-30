@@ -21,18 +21,71 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type BaseResponse struct {
+type ValidationError struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	StatusCode    int64                  `protobuf:"varint,1,opt,name=status_code,json=statusCode,proto3" json:"status_code,omitempty"`
+	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	IsError       bool                   `protobuf:"varint,3,opt,name=is_error,json=isError,proto3" json:"is_error,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
+func (x *ValidationError) Reset() {
+	*x = ValidationError{}
+	mi := &file_common_base_response_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ValidationError) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ValidationError) ProtoMessage() {}
+
+func (x *ValidationError) ProtoReflect() protoreflect.Message {
+	mi := &file_common_base_response_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ValidationError.ProtoReflect.Descriptor instead.
+func (*ValidationError) Descriptor() ([]byte, []int) {
+	return file_common_base_response_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *ValidationError) GetField() string {
+	if x != nil {
+		return x.Field
+	}
+	return ""
+}
+
+func (x *ValidationError) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+type BaseResponse struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	StatusCode       int64                  `protobuf:"varint,1,opt,name=status_code,json=statusCode,proto3" json:"status_code,omitempty"`
+	Message          string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	IsError          bool                   `protobuf:"varint,3,opt,name=is_error,json=isError,proto3" json:"is_error,omitempty"`
+	ValidationErrors []*ValidationError     `protobuf:"bytes,4,rep,name=validation_errors,json=validationErrors,proto3" json:"validation_errors,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
 func (x *BaseResponse) Reset() {
 	*x = BaseResponse{}
-	mi := &file_common_base_response_proto_msgTypes[0]
+	mi := &file_common_base_response_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +97,7 @@ func (x *BaseResponse) String() string {
 func (*BaseResponse) ProtoMessage() {}
 
 func (x *BaseResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_common_base_response_proto_msgTypes[0]
+	mi := &file_common_base_response_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +110,7 @@ func (x *BaseResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BaseResponse.ProtoReflect.Descriptor instead.
 func (*BaseResponse) Descriptor() ([]byte, []int) {
-	return file_common_base_response_proto_rawDescGZIP(), []int{0}
+	return file_common_base_response_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *BaseResponse) GetStatusCode() int64 {
@@ -81,16 +134,27 @@ func (x *BaseResponse) GetIsError() bool {
 	return false
 }
 
+func (x *BaseResponse) GetValidationErrors() []*ValidationError {
+	if x != nil {
+		return x.ValidationErrors
+	}
+	return nil
+}
+
 var File_common_base_response_proto protoreflect.FileDescriptor
 
 const file_common_base_response_proto_rawDesc = "" +
 	"\n" +
-	"\x1acommon/base_response.proto\x12\x06common\"d\n" +
+	"\x1acommon/base_response.proto\x12\x06common\"A\n" +
+	"\x0fValidationError\x12\x14\n" +
+	"\x05field\x18\x01 \x01(\tR\x05field\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\xaa\x01\n" +
 	"\fBaseResponse\x12\x1f\n" +
 	"\vstatus_code\x18\x01 \x01(\x03R\n" +
 	"statusCode\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x19\n" +
-	"\bis_error\x18\x03 \x01(\bR\aisErrorB6Z4github.com/JoelXaverl/ecommerce-go-grpc-be/pb/commonb\x06proto3"
+	"\bis_error\x18\x03 \x01(\bR\aisError\x12D\n" +
+	"\x11validation_errors\x18\x04 \x03(\v2\x17.common.ValidationErrorR\x10validationErrorsB6Z4github.com/JoelXaverl/ecommerce-go-grpc-be/pb/commonb\x06proto3"
 
 var (
 	file_common_base_response_proto_rawDescOnce sync.Once
@@ -104,16 +168,18 @@ func file_common_base_response_proto_rawDescGZIP() []byte {
 	return file_common_base_response_proto_rawDescData
 }
 
-var file_common_base_response_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_common_base_response_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_common_base_response_proto_goTypes = []any{
-	(*BaseResponse)(nil), // 0: common.BaseResponse
+	(*ValidationError)(nil), // 0: common.ValidationError
+	(*BaseResponse)(nil),    // 1: common.BaseResponse
 }
 var file_common_base_response_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: common.BaseResponse.validation_errors:type_name -> common.ValidationError
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_common_base_response_proto_init() }
@@ -127,7 +193,7 @@ func file_common_base_response_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_base_response_proto_rawDesc), len(file_common_base_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
