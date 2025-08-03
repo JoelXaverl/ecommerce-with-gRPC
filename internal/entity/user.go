@@ -2,6 +2,11 @@ package entity
 
 import "time"
 
+const (
+	UserRoleCustomer = "customer"
+	UserRoleAdmin = "admin"
+)
+
 type UserRole struct {
 	Id        string
 	Name     string
