@@ -7,6 +7,7 @@ require (
 	buf.build/go/protovalidate v0.14.0 // indirect
 	cel.dev/expr v0.24.0 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
 	github.com/google/cel-go v0.25.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect

@@ -2,18 +2,23 @@ package service
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/internal/entity"
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/internal/repository"
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/internal/utils"
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/pb/auth"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type IAuthService interface {
 	Register(ctx context.Context, request *auth.RegisterRequest) (*auth.RegisterResponse, error)
+	Login(ctx context.Context, request *auth.LoginRequest) (*auth.LoginResponse, error)
 }
 
 type authService struct {
@@ -29,7 +34,7 @@ func (as *authService) Register(ctx context.Context, request *auth.RegisterReque
 	// Ngecek email ke database
 	user, err := as.authRepository.GetUserByEmail(ctx, request.Email)
 	if err != nil {
-		return  nil, err
+		return nil, err
 	}
 	// Apabila email sdh terdaftar, kita error-in
 	if user != nil {
@@ -43,12 +48,12 @@ func (as *authService) Register(ctx context.Context, request *auth.RegisterReque
 		return nil, err
 	}
 	// Apabila email-nya blm terdaftar, kita insert ke db
-	newUser := entity.User {
-		Id: uuid.NewString(),
-		FullName: request.FullName,
-		Email: request.Email,
-		Password: string(hashedPassword),
-		RoleCode: entity.UserRoleCustomer,
+	newUser := entity.User{
+		Id:        uuid.NewString(),
+		FullName:  request.FullName,
+		Email:     request.Email,
+		Password:  string(hashedPassword),
+		RoleCode:  entity.UserRoleCustomer,
 		CreatedAt: time.Now(),
 		CreatedBy: &request.FullName,
 	}
@@ -59,6 +64,50 @@ func (as *authService) Register(ctx context.Context, request *auth.RegisterReque
 
 	return &auth.RegisterResponse{
 		Base: utils.SuccessResponse("User is registered"),
+	}, nil
+}
+
+// Login implements IAuthService.
+func (as *authService) Login(ctx context.Context, request *auth.LoginRequest) (*auth.LoginResponse, error) {
+	// check apakah email ada
+	user, err := as.authRepository.GetUserByEmail(ctx, request.Email)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return &auth.LoginResponse{
+			Base: utils.BadRequestResponse("User is not registered"),
+		}, nil
+	}
+	// check apakah password sama
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password))
+	if err != nil {
+    if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+        return nil, status.Errorf(codes.Unauthenticated, "Unauthenticated")
+    }
+    return nil, err
+	}
+	//generate jwt
+	now := time.Now()
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, entity.JwtClaims{
+		RegisteredClaims: jwt.RegisteredClaims{
+			Subject: user.Id,
+			ExpiresAt: jwt.NewNumericDate(now.Add(time.Hour * 24)),
+			IssuedAt: jwt.NewNumericDate(now),
+		},
+		Email:  user.Email,
+		FullName: user.FullName,
+		Role:   user.RoleCode,
+	})
+	secretKey := "testingsecretkey"
+	accessToken, err := token.SignedString([]byte(secretKey))
+	if err != nil {
+		return nil, err
+	}
+	//kirim response
+	return &auth.LoginResponse{
+		Base: utils.SuccessResponse("Login successfull"),
+		AccessToken: accessToken,
 	}, nil
 }
 
