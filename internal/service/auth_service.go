@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"os"
 	"time"
 
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/internal/entity"
@@ -99,7 +100,7 @@ func (as *authService) Login(ctx context.Context, request *auth.LoginRequest) (*
 		FullName: user.FullName,
 		Role:   user.RoleCode,
 	})
-	secretKey := "testingsecretkey"
+	secretKey := os.Getenv("JWT_SECRET")
 	accessToken, err := token.SignedString([]byte(secretKey))
 	if err != nil {
 		return nil, err
