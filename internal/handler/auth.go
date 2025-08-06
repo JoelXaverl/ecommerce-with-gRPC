@@ -34,6 +34,25 @@ func (sh *authHandler) Register(ctx context.Context, request *auth.RegisterReque
 	return res, nil
 }
 
+func (sh *authHandler) Logout(ctx context.Context, request *auth.LogoutRequest) (*auth.LogoutResponse, error) {
+	validationerrors, err := utils.CheckValidation(request)
+	if err != nil {
+		return nil, err
+	}
+	if validationerrors != nil {
+		return &auth.LogoutResponse{ 
+			Base: utils.ValidationErrorResponse(validationerrors),
+		}, nil
+	}
+	//Proses Register
+	res, err := sh.authService.Logout(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	
+	return res, nil
+}
+
 func (sh *authHandler) Login(ctx context.Context, request *auth.LoginRequest) (*auth.LoginResponse, error) {
 	validationerrors, err := utils.CheckValidation(request)
 	if err != nil {
