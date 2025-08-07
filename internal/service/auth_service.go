@@ -3,23 +3,20 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/internal/entity"
+	jwtentity "github.com/JoelXaverl/ecommerce-go-grpc-be/internal/entity/jwt"
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/internal/repository"
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/internal/utils"
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/pb/auth"
-	jwtentity "github.com/JoelXaverl/ecommerce-go-grpc-be/internal/entity/jwt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
+	gocache "github.com/patrickmn/go-cache"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	gocache "github.com/patrickmn/go-cache"
 )
 
 type IAuthService interface {
