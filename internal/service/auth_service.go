@@ -12,6 +12,7 @@ import (
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/internal/repository"
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/internal/utils"
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/pb/auth"
+	jwtentity "github.com/JoelXaverl/ecommerce-go-grpc-be/internal/entity/jwt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -96,7 +97,7 @@ func (as *authService) Login(ctx context.Context, request *auth.LoginRequest) (*
 	}
 	//generate jwt
 	now := time.Now()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, entity.JwtClaims{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwtentity.JwtClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   user.Id,
 			ExpiresAt: jwt.NewNumericDate(now.Add(time.Hour * 24)),
@@ -120,56 +121,18 @@ func (as *authService) Login(ctx context.Context, request *auth.LoginRequest) (*
 
 // Logout implements IAuthService.
 func (as *authService) Logout(ctx context.Context, request *auth.LogoutRequest) (*auth.LogoutResponse, error) {
-	// dapatkan token dari metadata
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
-	}
-
-	bearerToken, ok := md["authorization"]
-	if !ok {
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
-	}
-
-	if len(bearerToken) == 0 {
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
-	}
-
-	tokenSplit := strings.Split(bearerToken[0], " ")
-
-	if len(tokenSplit) != 2 {
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
-	}
-
-	if tokenSplit[0] != "Bearer" { // ini cara ngecek indeks ke 0 sama dengan "Bearer"
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
-	}
-
-	jwtToken := tokenSplit[1]
-	
-	// kembalikan token tadi hingga menjadi entity jwt yang sudah dibuat
-	tokenClaims, err := jwt.ParseWithClaims(jwtToken, &entity.JwtClaims{}, func(t *jwt.Token) (any, error) {
-		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method %v", t.Header["alg"])
-		}
-
-		return []byte(os.Getenv("JWT_SECRET")), nil
-	})
+	jwtToken, err := jwtentity.ParseTokenFromContext(ctx)
 	if err != nil {
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+		return nil, err
 	}
 
-	if !tokenClaims.Valid {
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
-	}
-
-	var claims *entity.JwtClaims
-	if claims, ok = tokenClaims.Claims.(*entity.JwtClaims); !ok {
-		return nil, status.Error(codes.Unauthenticated, "Unauthenticated")
+	tokenClaims, err := jwtentity.GetClaimFromToken(jwtToken)
+	if err != nil {
+		return nil, err
 	}
 
 	// masukkan token dari metadata ke dalam memory db / cache
-	as.cacheService.Set(jwtToken, "", time.Duration(claims.ExpiresAt.Time.Unix()-time.Now().Unix())*time.Second)
+	as.cacheService.Set(jwtToken, "", time.Duration(tokenClaims.ExpiresAt.Time.Unix()-time.Now().Unix())*time.Second)
 
 	// Kirim response
 	return &auth.LogoutResponse{
