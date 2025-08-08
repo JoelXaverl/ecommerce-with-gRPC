@@ -47,3 +47,13 @@ func GetClaimFromToken(token string) (*JwtClaims, error) {
 
 	return nil, utils.UnauthenticatedResponse()
 }
+
+func GetClaimsFromContext(ctx context.Context) (*JwtClaims, error) {
+	// Get data token
+	claims, ok := ctx.Value(JwtEntityContextKeyValue).(*JwtClaims)
+	if !ok {
+		return nil, utils.UnauthenticatedResponse()
+	}
+
+	return claims, nil
+}

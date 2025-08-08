@@ -11,6 +11,7 @@ import (
 	common "github.com/JoelXaverl/ecommerce-go-grpc-be/pb/common"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -423,11 +424,131 @@ func (x *ChangePasswordResponse) GetBase() *common.BaseResponse {
 	return nil
 }
 
+type GetProfileRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetProfileRequest) Reset() {
+	*x = GetProfileRequest{}
+	mi := &file_auth_auth_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetProfileRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetProfileRequest) ProtoMessage() {}
+
+func (x *GetProfileRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_auth_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetProfileRequest.ProtoReflect.Descriptor instead.
+func (*GetProfileRequest) Descriptor() ([]byte, []int) {
+	return file_auth_auth_proto_rawDescGZIP(), []int{8}
+}
+
+type GetProfileResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Base          *common.BaseResponse   `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	FullName      string                 `protobuf:"bytes,3,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
+	Email         string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
+	RoleCode      string                 `protobuf:"bytes,5,opt,name=role_code,json=roleCode,proto3" json:"role_code,omitempty"`
+	MemberSince   *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=member_since,json=memberSince,proto3" json:"member_since,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetProfileResponse) Reset() {
+	*x = GetProfileResponse{}
+	mi := &file_auth_auth_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetProfileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetProfileResponse) ProtoMessage() {}
+
+func (x *GetProfileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_auth_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetProfileResponse.ProtoReflect.Descriptor instead.
+func (*GetProfileResponse) Descriptor() ([]byte, []int) {
+	return file_auth_auth_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetProfileResponse) GetBase() *common.BaseResponse {
+	if x != nil {
+		return x.Base
+	}
+	return nil
+}
+
+func (x *GetProfileResponse) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *GetProfileResponse) GetFullName() string {
+	if x != nil {
+		return x.FullName
+	}
+	return ""
+}
+
+func (x *GetProfileResponse) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *GetProfileResponse) GetRoleCode() string {
+	if x != nil {
+		return x.RoleCode
+	}
+	return ""
+}
+
+func (x *GetProfileResponse) GetMemberSince() *timestamppb.Timestamp {
+	if x != nil {
+		return x.MemberSince
+	}
+	return nil
+}
+
 var File_auth_auth_proto protoreflect.FileDescriptor
 
 const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x0fauth/auth.proto\x12\x04auth\x1a\x1acommon/base_response.proto\x1a\x1bbuf/validate/validate.proto\"\xc7\x01\n" +
+	"\x0fauth/auth.proto\x12\x04auth\x1a\x1acommon/base_response.proto\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xc7\x01\n" +
 	"\x0fRegisterRequest\x12'\n" +
 	"\tfull_name\x18\x01 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xff\x01R\bfullName\x12\"\n" +
@@ -456,12 +577,22 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\x19new_password_confirmation\x18\x03 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xff\x01R\x17newPasswordConfirmation\"B\n" +
 	"\x16ChangePasswordResponse\x12(\n" +
-	"\x04base\x18\x01 \x01(\v2\x14.common.BaseResponseR\x04base2\xfc\x01\n" +
+	"\x04base\x18\x01 \x01(\v2\x14.common.BaseResponseR\x04base\"\x13\n" +
+	"\x11GetProfileRequest\"\xe6\x01\n" +
+	"\x12GetProfileResponse\x12(\n" +
+	"\x04base\x18\x01 \x01(\v2\x14.common.BaseResponseR\x04base\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x1b\n" +
+	"\tfull_name\x18\x03 \x01(\tR\bfullName\x12\x14\n" +
+	"\x05email\x18\x04 \x01(\tR\x05email\x12\x1b\n" +
+	"\trole_code\x18\x05 \x01(\tR\broleCode\x12=\n" +
+	"\fmember_since\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\vmemberSince2\xbd\x02\n" +
 	"\vAuthService\x129\n" +
 	"\bRegister\x12\x15.auth.RegisterRequest\x1a\x16.auth.RegisterResponse\x120\n" +
 	"\x05Login\x12\x12.auth.LoginRequest\x1a\x13.auth.LoginResponse\x123\n" +
 	"\x06Logout\x12\x13.auth.LogoutRequest\x1a\x14.auth.LogoutResponse\x12K\n" +
-	"\x0eChangePassword\x12\x1b.auth.ChangePasswordRequest\x1a\x1c.auth.ChangePasswordResponseB4Z2github.com/JoelXaverl/ecommerce-go-grpc-be/pb/authb\x06proto3"
+	"\x0eChangePassword\x12\x1b.auth.ChangePasswordRequest\x1a\x1c.auth.ChangePasswordResponse\x12?\n" +
+	"\n" +
+	"GetProfile\x12\x17.auth.GetProfileRequest\x1a\x18.auth.GetProfileResponseB4Z2github.com/JoelXaverl/ecommerce-go-grpc-be/pb/authb\x06proto3"
 
 var (
 	file_auth_auth_proto_rawDescOnce sync.Once
@@ -475,7 +606,7 @@ func file_auth_auth_proto_rawDescGZIP() []byte {
 	return file_auth_auth_proto_rawDescData
 }
 
-var file_auth_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_auth_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_auth_auth_proto_goTypes = []any{
 	(*RegisterRequest)(nil),        // 0: auth.RegisterRequest
 	(*RegisterResponse)(nil),       // 1: auth.RegisterResponse
@@ -485,26 +616,33 @@ var file_auth_auth_proto_goTypes = []any{
 	(*LogoutResponse)(nil),         // 5: auth.LogoutResponse
 	(*ChangePasswordRequest)(nil),  // 6: auth.ChangePasswordRequest
 	(*ChangePasswordResponse)(nil), // 7: auth.ChangePasswordResponse
-	(*common.BaseResponse)(nil),    // 8: common.BaseResponse
+	(*GetProfileRequest)(nil),      // 8: auth.GetProfileRequest
+	(*GetProfileResponse)(nil),     // 9: auth.GetProfileResponse
+	(*common.BaseResponse)(nil),    // 10: common.BaseResponse
+	(*timestamppb.Timestamp)(nil),  // 11: google.protobuf.Timestamp
 }
 var file_auth_auth_proto_depIdxs = []int32{
-	8, // 0: auth.RegisterResponse.base:type_name -> common.BaseResponse
-	8, // 1: auth.LoginResponse.base:type_name -> common.BaseResponse
-	8, // 2: auth.LogoutResponse.base:type_name -> common.BaseResponse
-	8, // 3: auth.ChangePasswordResponse.base:type_name -> common.BaseResponse
-	0, // 4: auth.AuthService.Register:input_type -> auth.RegisterRequest
-	2, // 5: auth.AuthService.Login:input_type -> auth.LoginRequest
-	4, // 6: auth.AuthService.Logout:input_type -> auth.LogoutRequest
-	6, // 7: auth.AuthService.ChangePassword:input_type -> auth.ChangePasswordRequest
-	1, // 8: auth.AuthService.Register:output_type -> auth.RegisterResponse
-	3, // 9: auth.AuthService.Login:output_type -> auth.LoginResponse
-	5, // 10: auth.AuthService.Logout:output_type -> auth.LogoutResponse
-	7, // 11: auth.AuthService.ChangePassword:output_type -> auth.ChangePasswordResponse
-	8, // [8:12] is the sub-list for method output_type
-	4, // [4:8] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	10, // 0: auth.RegisterResponse.base:type_name -> common.BaseResponse
+	10, // 1: auth.LoginResponse.base:type_name -> common.BaseResponse
+	10, // 2: auth.LogoutResponse.base:type_name -> common.BaseResponse
+	10, // 3: auth.ChangePasswordResponse.base:type_name -> common.BaseResponse
+	10, // 4: auth.GetProfileResponse.base:type_name -> common.BaseResponse
+	11, // 5: auth.GetProfileResponse.member_since:type_name -> google.protobuf.Timestamp
+	0,  // 6: auth.AuthService.Register:input_type -> auth.RegisterRequest
+	2,  // 7: auth.AuthService.Login:input_type -> auth.LoginRequest
+	4,  // 8: auth.AuthService.Logout:input_type -> auth.LogoutRequest
+	6,  // 9: auth.AuthService.ChangePassword:input_type -> auth.ChangePasswordRequest
+	8,  // 10: auth.AuthService.GetProfile:input_type -> auth.GetProfileRequest
+	1,  // 11: auth.AuthService.Register:output_type -> auth.RegisterResponse
+	3,  // 12: auth.AuthService.Login:output_type -> auth.LoginResponse
+	5,  // 13: auth.AuthService.Logout:output_type -> auth.LogoutResponse
+	7,  // 14: auth.AuthService.ChangePassword:output_type -> auth.ChangePasswordResponse
+	9,  // 15: auth.AuthService.GetProfile:output_type -> auth.GetProfileResponse
+	11, // [11:16] is the sub-list for method output_type
+	6,  // [6:11] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_auth_auth_proto_init() }
@@ -518,7 +656,7 @@ func file_auth_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_auth_proto_rawDesc), len(file_auth_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
