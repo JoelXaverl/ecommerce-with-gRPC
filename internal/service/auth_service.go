@@ -23,6 +23,7 @@ type IAuthService interface {
 	Register(ctx context.Context, request *auth.RegisterRequest) (*auth.RegisterResponse, error)
 	Login(ctx context.Context, request *auth.LoginRequest) (*auth.LoginResponse, error)
 	Logout(ctx context.Context, request *auth.LogoutRequest) (*auth.LogoutResponse, error)
+	ChangePassword(ctx context.Context, request *auth.ChangePasswordRequest) (*auth.ChangePasswordResponse, error)
 }
 
 type authService struct {
@@ -31,7 +32,7 @@ type authService struct {
 }
 
 func (as *authService) Register(ctx context.Context, request *auth.RegisterRequest) (*auth.RegisterResponse, error) {
-	if request.Password != request.PwsswordConfirmation {
+	if request.Password != request.PasswordConfirmation {
 		return &auth.RegisterResponse{
 			Base: utils.BadRequestResponse("Password is not matched"),
 		}, nil
@@ -134,6 +135,60 @@ func (as *authService) Logout(ctx context.Context, request *auth.LogoutRequest) 
 	// Kirim response
 	return &auth.LogoutResponse{
 		Base: utils.SuccessResponse("Logout success"),
+	}, nil
+}
+
+func (as *authService) ChangePassword(ctx context.Context, request *auth.ChangePasswordRequest) (*auth.ChangePasswordResponse, error) {
+	// Cek apakah new pass confirmation method
+	if request.NewPassword != request.NewPasswordConfirmation {
+		return &auth.ChangePasswordResponse{
+			Base: utils.BadRequestResponse("New password is not matched"),
+		}, nil
+	}
+
+	// Cek apakah old password sama
+	jwtToken, err := jwtentity.ParseTokenFromContext(ctx)
+	if err!= nil {
+		return nil, err
+	}
+	claims, err := jwtentity.GetClaimFromToken(jwtToken)
+	if err!= nil {
+		return nil, err
+	}
+
+	user, err := as.authRepository.GetUserByEmail(ctx, claims.Email)
+	if err!= nil {
+		return nil, err
+	}
+	if user == nil {
+		return &auth.ChangePasswordResponse{
+			Base: utils.BadRequestResponse("User doesn't exist"),
+		}, nil
+	}
+	
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.OldPassword))
+	if err != nil {
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			return &auth.ChangePasswordResponse{
+			Base: utils.BadRequestResponse("Old password ist not matched"),
+		}, nil
+		}
+		return nil, err
+	}
+	
+	// Update new password ke database
+	hashedNewPassword, err := bcrypt.GenerateFromPassword([]byte(request.NewPassword), 10)
+	if err != nil {
+		return nil, err
+	}
+	err = as.authRepository.UpdateUserPassword(ctx, user.Id, string(hashedNewPassword), user.FullName)
+	if err != nil {
+		return nil, err
+	}
+
+	// Kirim response
+	return &auth.ChangePasswordResponse{
+		Base: utils.SuccessResponse("Change password success"),
 	}, nil
 }
 

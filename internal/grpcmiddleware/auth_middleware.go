@@ -2,7 +2,6 @@ package grpcmiddleware
 
 import (
 	"context"
-	"log"
 
 	jwtentity "github.com/JoelXaverl/ecommerce-go-grpc-be/internal/entity/jwt"
 	"github.com/JoelXaverl/ecommerce-go-grpc-be/internal/utils"

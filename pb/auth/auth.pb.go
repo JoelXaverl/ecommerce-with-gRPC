@@ -28,7 +28,7 @@ type RegisterRequest struct {
 	FullName             string                 `protobuf:"bytes,1,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
 	Email                string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
 	Password             string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
-	PwsswordConfirmation string                 `protobuf:"bytes,4,opt,name=pwssword_confirmation,json=pwsswordConfirmation,proto3" json:"pwssword_confirmation,omitempty"`
+	PasswordConfirmation string                 `protobuf:"bytes,4,opt,name=password_confirmation,json=passwordConfirmation,proto3" json:"password_confirmation,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -84,9 +84,9 @@ func (x *RegisterRequest) GetPassword() string {
 	return ""
 }
 
-func (x *RegisterRequest) GetPwsswordConfirmation() string {
+func (x *RegisterRequest) GetPasswordConfirmation() string {
 	if x != nil {
-		return x.PwsswordConfirmation
+		return x.PasswordConfirmation
 	}
 	return ""
 }
@@ -319,6 +319,110 @@ func (x *LogoutResponse) GetBase() *common.BaseResponse {
 	return nil
 }
 
+type ChangePasswordRequest struct {
+	state                   protoimpl.MessageState `protogen:"open.v1"`
+	OldPassword             string                 `protobuf:"bytes,1,opt,name=old_password,json=oldPassword,proto3" json:"old_password,omitempty"`
+	NewPassword             string                 `protobuf:"bytes,2,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
+	NewPasswordConfirmation string                 `protobuf:"bytes,3,opt,name=new_password_confirmation,json=newPasswordConfirmation,proto3" json:"new_password_confirmation,omitempty"`
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
+}
+
+func (x *ChangePasswordRequest) Reset() {
+	*x = ChangePasswordRequest{}
+	mi := &file_auth_auth_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangePasswordRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangePasswordRequest) ProtoMessage() {}
+
+func (x *ChangePasswordRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_auth_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangePasswordRequest.ProtoReflect.Descriptor instead.
+func (*ChangePasswordRequest) Descriptor() ([]byte, []int) {
+	return file_auth_auth_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ChangePasswordRequest) GetOldPassword() string {
+	if x != nil {
+		return x.OldPassword
+	}
+	return ""
+}
+
+func (x *ChangePasswordRequest) GetNewPassword() string {
+	if x != nil {
+		return x.NewPassword
+	}
+	return ""
+}
+
+func (x *ChangePasswordRequest) GetNewPasswordConfirmation() string {
+	if x != nil {
+		return x.NewPasswordConfirmation
+	}
+	return ""
+}
+
+type ChangePasswordResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Base          *common.BaseResponse   `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChangePasswordResponse) Reset() {
+	*x = ChangePasswordResponse{}
+	mi := &file_auth_auth_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangePasswordResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangePasswordResponse) ProtoMessage() {}
+
+func (x *ChangePasswordResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_auth_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangePasswordResponse.ProtoReflect.Descriptor instead.
+func (*ChangePasswordResponse) Descriptor() ([]byte, []int) {
+	return file_auth_auth_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ChangePasswordResponse) GetBase() *common.BaseResponse {
+	if x != nil {
+		return x.Base
+	}
+	return nil
+}
+
 var File_auth_auth_proto protoreflect.FileDescriptor
 
 const file_auth_auth_proto_rawDesc = "" +
@@ -330,8 +434,8 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\x05email\x18\x02 \x01(\tB\f\xbaH\tr\a\x10\x01\x18\xff\x01`\x01R\x05email\x12&\n" +
 	"\bpassword\x18\x03 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\xff\x01R\bpassword\x12?\n" +
-	"\x15pwssword_confirmation\x18\x04 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\xff\x01R\x14pwsswordConfirmation\"<\n" +
+	"\x15password_confirmation\x18\x04 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xff\x01R\x14passwordConfirmation\"<\n" +
 	"\x10RegisterResponse\x12(\n" +
 	"\x04base\x18\x01 \x01(\v2\x14.common.BaseResponseR\x04base\"Z\n" +
 	"\fLoginRequest\x12\"\n" +
@@ -343,11 +447,21 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\faccess_token\x18\x02 \x01(\tR\vaccessToken\"\x0f\n" +
 	"\rLogoutRequest\":\n" +
 	"\x0eLogoutResponse\x12(\n" +
-	"\x04base\x18\x01 \x01(\v2\x14.common.BaseResponseR\x04base2\xaf\x01\n" +
+	"\x04base\x18\x01 \x01(\v2\x14.common.BaseResponseR\x04base\"\xbd\x01\n" +
+	"\x15ChangePasswordRequest\x12-\n" +
+	"\fold_password\x18\x01 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xff\x01R\voldPassword\x12-\n" +
+	"\fnew_password\x18\x02 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xff\x01R\vnewPassword\x12F\n" +
+	"\x19new_password_confirmation\x18\x03 \x01(\tB\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xff\x01R\x17newPasswordConfirmation\"B\n" +
+	"\x16ChangePasswordResponse\x12(\n" +
+	"\x04base\x18\x01 \x01(\v2\x14.common.BaseResponseR\x04base2\xfc\x01\n" +
 	"\vAuthService\x129\n" +
 	"\bRegister\x12\x15.auth.RegisterRequest\x1a\x16.auth.RegisterResponse\x120\n" +
 	"\x05Login\x12\x12.auth.LoginRequest\x1a\x13.auth.LoginResponse\x123\n" +
-	"\x06Logout\x12\x13.auth.LogoutRequest\x1a\x14.auth.LogoutResponseB4Z2github.com/JoelXaverl/ecommerce-go-grpc-be/pb/authb\x06proto3"
+	"\x06Logout\x12\x13.auth.LogoutRequest\x1a\x14.auth.LogoutResponse\x12K\n" +
+	"\x0eChangePassword\x12\x1b.auth.ChangePasswordRequest\x1a\x1c.auth.ChangePasswordResponseB4Z2github.com/JoelXaverl/ecommerce-go-grpc-be/pb/authb\x06proto3"
 
 var (
 	file_auth_auth_proto_rawDescOnce sync.Once
@@ -361,31 +475,36 @@ func file_auth_auth_proto_rawDescGZIP() []byte {
 	return file_auth_auth_proto_rawDescData
 }
 
-var file_auth_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_auth_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_auth_auth_proto_goTypes = []any{
-	(*RegisterRequest)(nil),     // 0: auth.RegisterRequest
-	(*RegisterResponse)(nil),    // 1: auth.RegisterResponse
-	(*LoginRequest)(nil),        // 2: auth.LoginRequest
-	(*LoginResponse)(nil),       // 3: auth.LoginResponse
-	(*LogoutRequest)(nil),       // 4: auth.LogoutRequest
-	(*LogoutResponse)(nil),      // 5: auth.LogoutResponse
-	(*common.BaseResponse)(nil), // 6: common.BaseResponse
+	(*RegisterRequest)(nil),        // 0: auth.RegisterRequest
+	(*RegisterResponse)(nil),       // 1: auth.RegisterResponse
+	(*LoginRequest)(nil),           // 2: auth.LoginRequest
+	(*LoginResponse)(nil),          // 3: auth.LoginResponse
+	(*LogoutRequest)(nil),          // 4: auth.LogoutRequest
+	(*LogoutResponse)(nil),         // 5: auth.LogoutResponse
+	(*ChangePasswordRequest)(nil),  // 6: auth.ChangePasswordRequest
+	(*ChangePasswordResponse)(nil), // 7: auth.ChangePasswordResponse
+	(*common.BaseResponse)(nil),    // 8: common.BaseResponse
 }
 var file_auth_auth_proto_depIdxs = []int32{
-	6, // 0: auth.RegisterResponse.base:type_name -> common.BaseResponse
-	6, // 1: auth.LoginResponse.base:type_name -> common.BaseResponse
-	6, // 2: auth.LogoutResponse.base:type_name -> common.BaseResponse
-	0, // 3: auth.AuthService.Register:input_type -> auth.RegisterRequest
-	2, // 4: auth.AuthService.Login:input_type -> auth.LoginRequest
-	4, // 5: auth.AuthService.Logout:input_type -> auth.LogoutRequest
-	1, // 6: auth.AuthService.Register:output_type -> auth.RegisterResponse
-	3, // 7: auth.AuthService.Login:output_type -> auth.LoginResponse
-	5, // 8: auth.AuthService.Logout:output_type -> auth.LogoutResponse
-	6, // [6:9] is the sub-list for method output_type
-	3, // [3:6] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	8, // 0: auth.RegisterResponse.base:type_name -> common.BaseResponse
+	8, // 1: auth.LoginResponse.base:type_name -> common.BaseResponse
+	8, // 2: auth.LogoutResponse.base:type_name -> common.BaseResponse
+	8, // 3: auth.ChangePasswordResponse.base:type_name -> common.BaseResponse
+	0, // 4: auth.AuthService.Register:input_type -> auth.RegisterRequest
+	2, // 5: auth.AuthService.Login:input_type -> auth.LoginRequest
+	4, // 6: auth.AuthService.Logout:input_type -> auth.LogoutRequest
+	6, // 7: auth.AuthService.ChangePassword:input_type -> auth.ChangePasswordRequest
+	1, // 8: auth.AuthService.Register:output_type -> auth.RegisterResponse
+	3, // 9: auth.AuthService.Login:output_type -> auth.LoginResponse
+	5, // 10: auth.AuthService.Logout:output_type -> auth.LogoutResponse
+	7, // 11: auth.AuthService.ChangePassword:output_type -> auth.ChangePasswordResponse
+	8, // [8:12] is the sub-list for method output_type
+	4, // [4:8] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_auth_auth_proto_init() }
@@ -399,7 +518,7 @@ func file_auth_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_auth_proto_rawDesc), len(file_auth_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
